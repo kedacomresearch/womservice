@@ -1,7 +1,4 @@
 /* eslint-disable no-unused-vars */
-const errors = require('@feathersjs/errors');
-let idGenerator = require('../../../config/idGenerator');
-const logger = require('winston');
 const webstreamer = require('../../webstreamer');
 
 class Service {
@@ -10,7 +7,6 @@ class Service {
   }
 
   async find (params) {
-    logger.info(params);
     return [];
   }
 
@@ -26,20 +22,15 @@ class Service {
     }
 
     let name = data.name;
-    let performer_ep = data.performer_ep;
-
-    webstreamer.createLiveStream(name);
-    let livestream = webstreamer.getLiveStream(name);
+    let audience_ep = data.audience_ep;
 
     try {
-      await livestream.initialize();
-      await livestream.addPerformer(performer_ep);
-      await livestream.startup();
+      await webstreamer.liveStreamAddAudience(name, audience_ep);
     } catch(err) {
       throw err;
     }
 
-    return name;
+    return audience_ep.name;
   }
 
   async update (id, data, params) {
@@ -52,15 +43,14 @@ class Service {
 
   async remove (id, params) {
     if(id && typeof id !== 'string') {
-      throw Error('params error, live stream name should be provided!');
+      throw Error('params error, audience name should be provided');
     }
 
-    let name =  params.query.name;
+    let name = params.query.name,
+      audience_name = params.query.audience_name;
 
-    let livestream = webstreamer.getLiveStream(name);
     try {
-      await livestream.stop();
-      await livestream.terminate();
+      await webstreamer.liveStreamRemoveAudience(name, audience_name);
     } catch(err) {
       throw err;
     }

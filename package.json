@@ -1,6 +1,6 @@
 {
   "name": "womservice",
-  "description": "",
+  "description": "womservice",
   "version": "0.0.0",
   "homepage": "",
   "main": "src",
@@ -32,10 +32,14 @@
     "@feathersjs/errors": "^3.2.2",
     "@feathersjs/express": "^1.1.2",
     "@feathersjs/feathers": "^3.1.0",
+    "@feathersjs/socketio": "^3.1.0",
+    "chai": "^4.1.2",
     "compression": "^1.7.1",
     "cors": "^2.8.4",
     "helmet": "^3.10.0",
+    "node-uuid": "^1.4.8",
     "serve-favicon": "^2.4.5",
+    "webstreamer": "git+https://github.com/kobegan/webstreamer.git",
     "winston": "^2.4.0"
   },
   "devDependencies": {

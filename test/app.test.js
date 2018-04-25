@@ -1,7 +1,8 @@
-const assert = require('assert');
 const rp = require('request-promise');
 const url = require('url');
 const app = require('../src/app');
+const chai = require('chai');
+const assert = chai.assert;
 
 const port = app.get('port') || 3030;
 const getUrl = pathname => url.format({
