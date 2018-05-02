@@ -3,7 +3,7 @@ const createService = require('./livestream.class.js');
 const hooks = require('./livestream.hooks');
 
 module.exports = function (app) {
-  
+
   const paginate = app.get('paginate');
 
   const options = {
