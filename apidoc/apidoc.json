@@ -1,0 +1,20 @@
+{
+  "name": "流媒体直播服务RESTFUL API",
+  "version": "0.1.0",
+  "description": "流媒体直播是面向Web的媒体子系统的子功能，本文档主要为用户使用流媒体直播服务提供RESTFUL API指南",
+  "title": "LiveStrean Service RESTFUL API",
+  "url" : "http://localhost:3030",
+  "header": {
+    "title": "LiveStream Service RESTFUL API",
+    "filename": "header.md"
+  },
+  "order": [
+    "CreateLiveStream",
+	"DeleteLiveStream",
+	"AddLiveStreamAudience",
+    "RemoveLiveStreamAudience"
+  ],
+  "template": {
+  	"withGenerator": true
+  }
+}

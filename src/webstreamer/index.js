@@ -3,6 +3,8 @@
  */
 
 const webstreamer = require('webstreamer');
+const errors = require('@feathersjs/errors');
+
 
 webstreamer.Initialize({
   rtsp_server: {
@@ -33,51 +35,25 @@ module.exports.deleteRtspTestServer = async function(name) {
   }
 };
 
-module.exports.createLiveStream = function (name) {
-  if(!livestreams[name]) {
-    livestreams[name] = new webstreamer.LiveStream(name);
+module.exports.createLiveStream = function (uuid) {
+
+  livestreams[uuid] = new webstreamer.LiveStream(uuid);
+
+};
+
+module.exports.getLiveStream = function (uuid) {
+  if(livestreams[uuid]) {
+    return livestreams[uuid];
   } else {
-    throw Error(`live stream named ${name} already created!`);
+    throw Error('LiveStreamNotFound');
   }
 };
 
-module.exports.liveStreamStartup = function (name) {
-  if(livestreams[name]) {
-    return livestreams[name].startup();
+module.exports.removeLiveStream = function (uuid) {
+  if(livestreams[uuid]) {
+    delete livestreams[uuid];
   } else {
-    throw Error(`live stream named ${name} not existed!`);
-  }
-};
-
-module.exports.liveStreamInitialize = function (name) {
-  if(livestreams[name]) {
-    return livestreams[name].initialize();
-  } else {
-    throw Error(`live stream named ${name} not existed!`);
-  }
-};
-
-module.exports.getLiveStream = function (name) {
-  if(livestreams[name]) {
-    return livestreams[name];
-  } else {
-    throw Error(`live stream named ${name} not existed!`);
-  }
-};
-
-module.exports.liveStreamStop= function (name) {
-  if(livestreams[name]) {
-    return livestreams[name].stop();
-  } else {
-    throw Error(`live stream named ${name} not existed!`);
-  }
-};
-
-module.exports.liveStreamTerminate = function (name) {
-  if(livestreams[name]) {
-    return livestreams[name].terminate();
-  } else {
-    throw Error(`live stream named ${name} not existed!`);
+    throw Error('LiveStreamNotFound');
   }
 };
 
@@ -89,19 +65,19 @@ module.exports.liveStreamAddPerformer = function (name, performer_ep) {
   }
 };
 
-module.exports.liveStreamAddAudience = function (name, audience_ep) {
-  if(livestreams[name]) {
-    return livestreams[name].addAudience(audience_ep);
+module.exports.liveStreamAddAudience = async function (uuid, audience) {
+  if(livestreams[uuid]) {
+    return livestreams[uuid].addAudience(audience);
   } else {
-    throw Error(`live stream named ${name} not existed!`);
+    throw new errors.GeneralError('LiveStreamNotFound');
   }
 };
 
-module.exports.liveStreamRemoveAudience = function (name, audience_name) {
-  if(livestreams[name]) {
-    return livestreams[name].removeAudience(audience_name);
+module.exports.liveStreamRemoveAudience = function (livestreamId, audienceId) {
+  if(livestreams[livestreamId]) {
+    return livestreams[livestreamId].removeAudience(audienceId);
   } else {
-    throw Error(`live stream named ${name} not existed!`);
+    throw Error('LiveStreamNotFound');
   }
 };
 

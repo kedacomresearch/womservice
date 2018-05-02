@@ -63,47 +63,47 @@ describe('\'livestream\' service', () => {
       await rtsp_test_server_app.terminate();
     });
 
-    let performer_ep = {
-      name: 'endpoint1',
-      protocol: 'rtspclient', // rtspclient/rtspserver
-      url: 'rtsp://127.0.0.1/test',
-      video_codec: 'h264', // optional
-      audio_codec: 'pcma' // optional
-    };
     let audience_ep = {
       name: 'endpoint2',
       protocol: 'rtspserver', // rtspclient/rtspserver
-      path: '/test_server',
-      video_codec: 'h264', // optional
-      audio_codec: 'pcma' // optional
+      path: '/test_server'
     };
-    let name = 'livestream1';
+    let livestreamId,audienceId;
 
-    it('create livestream and return name of the livestream', () => {
+    it('create livestream and return id of the livestream', () => {
       return rp({
         method: 'POST',
         url: getUrl('wom/livestream'),
         body : {
-          name: name,
-          performer_ep: performer_ep
+          source: {
+            name: 'endpoint1',
+            protocol: 'rtspclient', // rtspclient/rtspserver
+            url: 'rtsp://127.0.0.1/test'
+          }
         },
         json: true
       }).then((res) => {
-        assert.equal(res, name);
+        livestreamId = res.id;
+        if(!livestreamId) {
+          assert.fail();
+        }
       });
     });
 
     it('add livestream audience', () => {
       return rp({
         method: 'POST',
-        url: getUrl('wom/livestreamaudience'),
+        url: getUrl('wom/livestream.audience'),
         body : {
-          name: name,
-          audience_ep: audience_ep
+          id: livestreamId,
+          audience: audience_ep
         },
         json: true
       }).then((res) => {
-        assert.equal(res, audience_ep.name);
+        audienceId = res.id;
+        if(!audienceId) {
+          assert.fail();
+        }
       });
     });
 
@@ -121,7 +121,7 @@ describe('\'livestream\' service', () => {
 
       try {
         await webstreamer.utils.poll(() => {
-          if ((analyzer_app.audio_passed >= 3) &&
+          if((analyzer_app.audio_passed >= 3) &&
             (analyzer_app.images.length >= 10))
             return true;
           else
@@ -151,13 +151,13 @@ describe('\'livestream\' service', () => {
 
     it('remove livestream audience', () => {
       return rp.del({
-        url: getUrl('wom/livestreamaudience'),
+        url: getUrl('wom/livestream.audience'),
         qs : {
-          name: name,
-          audience_name: audience_ep.name
+          audienceId: audienceId,
+          livestreamId: livestreamId
         }
       }).then((res) => {
-        assert.equal('true', res);
+        assert.equal('{"OK":"success"}', res);
       });
     });
 
@@ -165,10 +165,10 @@ describe('\'livestream\' service', () => {
       return rp.del({
         url: getUrl('wom/livestream'),
         qs : {
-          name: name
+          id: livestreamId
         }
       }).then((res) => {
-        assert.equal('true', res);
+        assert.equal('{"OK":"success"}', res);
       });
     });
 
