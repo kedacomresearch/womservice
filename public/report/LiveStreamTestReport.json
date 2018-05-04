@@ -1,0 +1,361 @@
+{
+  "stats": {
+    "suites": 4,
+    "tests": 8,
+    "passes": 8,
+    "pending": 0,
+    "failures": 0,
+    "start": "2018-05-04T06:39:05.234Z",
+    "end": "2018-05-04T06:39:11.456Z",
+    "duration": 6222,
+    "testsRegistered": 8,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false,
+    "passPercentClass": "success",
+    "pendingPercentClass": "danger"
+  },
+  "suites": {
+    "uuid": "c0ce32a2-6926-4f86-9b46-caa938907f6f",
+    "title": "",
+    "fullFile": "",
+    "file": "",
+    "beforeHooks": [],
+    "afterHooks": [],
+    "tests": [],
+    "suites": [
+      {
+        "uuid": "597dfe58-1197-4c0e-9d69-a3d018751a9e",
+        "title": "wom application tests",
+        "fullFile": "E:\\github\\kedacomresearch\\womservice_bk\\test\\app.test.js",
+        "file": "\\test\\app.test.js",
+        "beforeHooks": [
+          {
+            "title": "\"before all\" hook",
+            "fullTitle": "wom application tests \"before all\" hook",
+            "timedOut": false,
+            "duration": 3,
+            "pass": false,
+            "fail": false,
+            "pending": false,
+            "code": "this.server = app.listen(port);\nthis.server.once('listening', () => done());",
+            "err": {},
+            "isRoot": false,
+            "uuid": "de6dd181-c81a-455c-87f6-79a4d5a4b79b",
+            "isHook": true,
+            "skipped": false
+          }
+        ],
+        "afterHooks": [
+          {
+            "title": "\"after all\" hook",
+            "fullTitle": "wom application tests \"after all\" hook",
+            "timedOut": false,
+            "duration": 0,
+            "pass": false,
+            "fail": false,
+            "pending": false,
+            "code": "this.server.close(done);",
+            "err": {},
+            "isRoot": false,
+            "uuid": "be5ac55f-5d98-4db1-b5d4-370d0dc04c6d",
+            "isHook": true,
+            "skipped": false
+          }
+        ],
+        "tests": [
+          {
+            "title": "starts and shows the index page",
+            "fullTitle": "wom application tests starts and shows the index page",
+            "timedOut": false,
+            "duration": 25,
+            "state": "passed",
+            "speed": "fast",
+            "pass": true,
+            "fail": false,
+            "pending": false,
+            "code": "return rp(getUrl()).then(body =>\n  assert.ok(body.indexOf('<html>') !== -1)\n);",
+            "err": {},
+            "isRoot": false,
+            "uuid": "5995e17d-3364-44b5-bc95-686601abd2ff",
+            "isHook": false,
+            "skipped": false
+          }
+        ],
+        "suites": [
+          {
+            "uuid": "71f18e2a-e855-432d-967b-4b893b9d5dc4",
+            "title": "404",
+            "fullFile": "E:\\github\\kedacomresearch\\womservice_bk\\test\\app.test.js",
+            "file": "\\test\\app.test.js",
+            "beforeHooks": [],
+            "afterHooks": [],
+            "tests": [
+              {
+                "title": "shows a 404 HTML page",
+                "fullTitle": "wom application tests 404 shows a 404 HTML page",
+                "timedOut": false,
+                "duration": 9,
+                "state": "passed",
+                "speed": "fast",
+                "pass": true,
+                "fail": false,
+                "pending": false,
+                "code": "return rp({\n  url: getUrl('path/to/nowhere'),\n  headers: {\n    'Accept': 'text/html'\n  }\n}).catch(res => {\n  assert.equal(res.statusCode, 404);\n  assert.ok(res.error.indexOf('<html>') !== -1);\n});",
+                "err": {},
+                "isRoot": false,
+                "uuid": "8ea95adc-57fd-4cdd-a892-a66b68d21060",
+                "isHook": false,
+                "skipped": false
+              },
+              {
+                "title": "shows a 404 JSON error without stack trace",
+                "fullTitle": "wom application tests 404 shows a 404 JSON error without stack trace",
+                "timedOut": false,
+                "duration": 4,
+                "state": "passed",
+                "speed": "fast",
+                "pass": true,
+                "fail": false,
+                "pending": false,
+                "code": "return rp({\n  url: getUrl('path/to/nowhere'),\n  json: true\n}).catch(res => {\n  assert.equal(res.statusCode, 404);\n  assert.equal(res.error.code, 404);\n  assert.equal(res.error.message, 'Page not found');\n  assert.equal(res.error.name, 'NotFound');\n});",
+                "err": {},
+                "isRoot": false,
+                "uuid": "08aae7d5-be7a-4815-a263-61e4a8c166fb",
+                "isHook": false,
+                "skipped": false
+              }
+            ],
+            "suites": [],
+            "passes": [
+              "8ea95adc-57fd-4cdd-a892-a66b68d21060",
+              "08aae7d5-be7a-4815-a263-61e4a8c166fb"
+            ],
+            "failures": [],
+            "pending": [],
+            "skipped": [],
+            "duration": 13,
+            "root": false,
+            "rootEmpty": false,
+            "_timeout": 2000
+          }
+        ],
+        "passes": [
+          "5995e17d-3364-44b5-bc95-686601abd2ff"
+        ],
+        "failures": [],
+        "pending": [],
+        "skipped": [],
+        "duration": 25,
+        "root": false,
+        "rootEmpty": false,
+        "_timeout": 2000
+      },
+      {
+        "uuid": "a0325cac-cf21-4a36-a9a7-8dc29bb192cc",
+        "title": "'livestream' service",
+        "fullFile": "E:\\github\\kedacomresearch\\womservice_bk\\test\\services\\livestream.test.js",
+        "file": "\\test\\services\\livestream.test.js",
+        "beforeHooks": [
+          {
+            "title": "\"before all\" hook",
+            "fullTitle": "'livestream' service \"before all\" hook",
+            "timedOut": false,
+            "duration": 0,
+            "pass": false,
+            "fail": false,
+            "pending": false,
+            "code": "this.server = app.listen(port);\nthis.server.once('listening', () => done());",
+            "err": {},
+            "isRoot": false,
+            "uuid": "68fa0f0a-e8d6-439c-b343-18106660a6e5",
+            "isHook": true,
+            "skipped": false
+          }
+        ],
+        "afterHooks": [
+          {
+            "title": "\"after all\" hook",
+            "fullTitle": "'livestream' service \"after all\" hook",
+            "timedOut": false,
+            "duration": 0,
+            "pass": false,
+            "fail": false,
+            "pending": false,
+            "code": "webstreamer.Terminate();\nthis.server.close(done);",
+            "err": {},
+            "isRoot": false,
+            "uuid": "36c5997d-88f7-47c7-ac66-a2b2b0b5f762",
+            "isHook": true,
+            "skipped": false
+          }
+        ],
+        "tests": [],
+        "suites": [
+          {
+            "uuid": "e1f80116-6789-4866-9294-5fa204c8fe09",
+            "title": "livestream service rtsp analyze",
+            "fullFile": "E:\\github\\kedacomresearch\\womservice_bk\\test\\services\\livestream.test.js",
+            "file": "\\test\\services\\livestream.test.js",
+            "beforeHooks": [
+              {
+                "title": "\"before all\" hook",
+                "fullTitle": "'livestream' service livestream service rtsp analyze \"before all\" hook",
+                "timedOut": false,
+                "duration": 2,
+                "pass": false,
+                "fail": false,
+                "pending": false,
+                "code": "// initialize rtsp test server app\nrtsp_test_server_app = new webstreamer.RTSPTestServer('rtsp_test_server');\nawait rtsp_test_server_app.initialize();\nawait rtsp_test_server_app.startup();\n// initialize analyzer app\nanalyzer_app = new webstreamer.RTSPAnalyzer('rtsp_test_analyzer', 'rtsp://127.0.0.1/test_server');\nawait analyzer_app.initialize();\nanalyzer_app.on('spectrum', function (data) {\n  let obj = JSON.parse(data.toString('utf8'));\n  let magnitude = obj.magnitude;\n  analyzer_app.calc_band_number(magnitude);\n});\nanalyzer_app.on('multifilesink', async function (data) {\n  analyzer_app.store_image(data);\n});",
+                "err": {},
+                "isRoot": false,
+                "uuid": "ed3b7838-f28d-4a15-920c-bca5bca1d272",
+                "isHook": true,
+                "skipped": false
+              }
+            ],
+            "afterHooks": [
+              {
+                "title": "\"after all\" hook",
+                "fullTitle": "'livestream' service livestream service rtsp analyze \"after all\" hook",
+                "timedOut": false,
+                "duration": 53,
+                "pass": false,
+                "fail": false,
+                "pending": false,
+                "code": "await analyzer_app.terminate();\nawait analyzer_app.clean();\nawait rtsp_test_server_app.stop();\nawait rtsp_test_server_app.terminate();",
+                "err": {},
+                "isRoot": false,
+                "uuid": "214d4c3c-763d-4d6e-aa33-26246e7dc094",
+                "isHook": true,
+                "skipped": false
+              }
+            ],
+            "tests": [
+              {
+                "title": "create livestream and return id of the livestream",
+                "fullTitle": "'livestream' service livestream service rtsp analyze create livestream and return id of the livestream",
+                "timedOut": false,
+                "duration": 43,
+                "state": "passed",
+                "speed": "medium",
+                "pass": true,
+                "fail": false,
+                "pending": false,
+                "code": "return rp({\n  method: 'POST',\n  url: getUrl('wom/livestream'),\n  body : {\n    source: {\n      name: 'endpoint1',\n      protocol: 'rtspclient', // rtspclient/rtspserver\n      url: 'rtsp://127.0.0.1/test'\n    }\n  },\n  json: true\n}).then((res) => {\n  livestreamId = res.id;\n  if(!livestreamId) {\n    assert.fail();\n  }\n});",
+                "err": {},
+                "isRoot": false,
+                "uuid": "577b19ca-cce2-493b-8787-746ba199f8df",
+                "isHook": false,
+                "skipped": false
+              },
+              {
+                "title": "add livestream audience",
+                "fullTitle": "'livestream' service livestream service rtsp analyze add livestream audience",
+                "timedOut": false,
+                "duration": 4,
+                "state": "passed",
+                "speed": "fast",
+                "pass": true,
+                "fail": false,
+                "pending": false,
+                "code": "return rp({\n  method: 'POST',\n  url: getUrl('wom/livestream.audience'),\n  body : {\n    id: livestreamId,\n    audience: audience_ep\n  },\n  json: true\n}).then((res) => {\n  audienceId = res.id;\n  if(!audienceId) {\n    assert.fail();\n  }\n});",
+                "err": {},
+                "isRoot": false,
+                "uuid": "e06336f2-ad1b-4df6-9695-bc529e6ed2fb",
+                "isHook": false,
+                "skipped": false
+              },
+              {
+                "title": "rtsp analyze",
+                "fullTitle": "'livestream' service livestream service rtsp analyze rtsp analyze",
+                "timedOut": false,
+                "duration": 6055,
+                "state": "passed",
+                "speed": "slow",
+                "pass": true,
+                "fail": false,
+                "pending": false,
+                "code": "this.timeout(0);\nawait sleep(1000);\ntry {\n  await analyzer_app.startup();\n} catch (err) {\n  throw err;\n}\n\ntry {\n  await webstreamer.utils.poll(() => {\n    if((analyzer_app.audio_passed >= 3) &&\n      (analyzer_app.images.length >= 10))\n      return true;\n    else\n      return false;\n  }, 100, 10000);\n} catch (err) {\n  throw err;\n}\nlet image_res;\ntry {\n  image_res = await analyzer_app.analyze_image();\n} catch (err) {\n  throw err;\n}\ntry {\n  await analyzer_app.stop();\n} catch (error) {\n  throw new Error('video analyze failed: ' + error);\n}\nimage_res.forEach((value) => {\n  assert.closeTo(value.time, value.ms, 10, 'ocr recognize time');\n});",
+                "err": {},
+                "isRoot": false,
+                "uuid": "108912d1-337d-4d3f-8916-4150b0beadfd",
+                "isHook": false,
+                "skipped": false
+              },
+              {
+                "title": "remove livestream audience",
+                "fullTitle": "'livestream' service livestream service rtsp analyze remove livestream audience",
+                "timedOut": false,
+                "duration": 5,
+                "state": "passed",
+                "speed": "fast",
+                "pass": true,
+                "fail": false,
+                "pending": false,
+                "code": "return rp.del({\n  url: getUrl('wom/livestream.audience'),\n  qs : {\n    audienceId: audienceId,\n    livestreamId: livestreamId\n  }\n}).then((res) => {\n  assert.equal('{\"OK\":\"success\"}', res);\n});",
+                "err": {},
+                "isRoot": false,
+                "uuid": "18e117d6-30e5-4085-ac1b-ae717ee5f586",
+                "isHook": false,
+                "skipped": false
+              },
+              {
+                "title": "delete livestream",
+                "fullTitle": "'livestream' service livestream service rtsp analyze delete livestream",
+                "timedOut": false,
+                "duration": 6,
+                "state": "passed",
+                "speed": "fast",
+                "pass": true,
+                "fail": false,
+                "pending": false,
+                "code": "return rp.del({\n  url: getUrl('wom/livestream'),\n  qs : {\n    id: livestreamId\n  }\n}).then((res) => {\n  assert.equal('{\"OK\":\"success\"}', res);\n});",
+                "err": {},
+                "isRoot": false,
+                "uuid": "cfdcd7de-c9f8-42f3-8496-7f4bf5640f89",
+                "isHook": false,
+                "skipped": false
+              }
+            ],
+            "suites": [],
+            "passes": [
+              "577b19ca-cce2-493b-8787-746ba199f8df",
+              "e06336f2-ad1b-4df6-9695-bc529e6ed2fb",
+              "108912d1-337d-4d3f-8916-4150b0beadfd",
+              "18e117d6-30e5-4085-ac1b-ae717ee5f586",
+              "cfdcd7de-c9f8-42f3-8496-7f4bf5640f89"
+            ],
+            "failures": [],
+            "pending": [],
+            "skipped": [],
+            "duration": 6113,
+            "root": false,
+            "rootEmpty": false,
+            "_timeout": 2000
+          }
+        ],
+        "passes": [],
+        "failures": [],
+        "pending": [],
+        "skipped": [],
+        "duration": 0,
+        "root": false,
+        "rootEmpty": false,
+        "_timeout": 2000
+      }
+    ],
+    "passes": [],
+    "failures": [],
+    "pending": [],
+    "skipped": [],
+    "duration": 0,
+    "root": true,
+    "rootEmpty": true,
+    "_timeout": 2000
+  },
+  "copyrightYear": 2018
+}
