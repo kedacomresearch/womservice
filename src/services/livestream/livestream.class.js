@@ -3,10 +3,15 @@ const errors = require('@feathersjs/errors');
 const logger = require('winston');
 const webstreamer = require('../../webstreamer');
 const uuidv1= require('uuid/v1');
+const livestreamStorage = require('../../utilities').livestreamStorage;
 
 class Service {
   constructor (options) {
     this.options = options || {};
+  }
+
+  async find () {
+    return JSON.stringify(livestreamStorage);
   }
 
   async create (data, params) {
@@ -38,6 +43,8 @@ class Service {
       throw new errors.GeneralError(err.message);
     });
 
+    livestreamStorage[uuid] = name;
+
     return {
       id: uuid
     };
@@ -58,6 +65,8 @@ class Service {
     });
 
     webstreamer.removeLiveStream(uuid);
+
+    delete livestreamStorage[uuid];
 
     return {
       OK: 'success'

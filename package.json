@@ -25,7 +25,7 @@
     "test": "npm run eslint && npm run mocha",
     "eslint": "eslint src/. test/. --config .eslintrc.json",
     "start": "node src/",
-    "mocha": "mocha test/ --recursive --reporter mochawesome --reporter-options reportDir=public/report,reportFilename=LiveStreamTestReport --exit"
+    "mocha": "mocha test/ --recursive --reporter mochawesome --reporter-options reportDir=public/wom/report,reportFilename=womReport --exit"
   },
   "dependencies": {
     "@feathersjs/configuration": "^1.0.2",

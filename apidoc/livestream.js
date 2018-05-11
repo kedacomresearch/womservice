@@ -6,8 +6,8 @@
  *
  * @apiParam {Object} source 待创建的直播流媒体源信息.
  * @apiParam {string} source.name 待创建的直播流媒体源名称.
- * @apiParam {string} performer_ep.protocol 待创建的直播流媒体源的类型，目前仅支持创建类型为rtspclient的直播流媒体源.
- * @apiParam {string} performer_ep.url 为待创建的直播流媒体源提供媒体流的地址.
+ * @apiParam {string} source.protocol 待创建的直播流媒体源的类型，目前支持创建类型为rtspclient的直播流媒体源.
+ * @apiParam {string} source.url 为待创建的直播流媒体源提供媒体流的地址.
  *
  * @apiExample Example usage:
  * curl -X POST http://localhost:3030/wom/livestream
@@ -85,10 +85,12 @@ function deleteLiveStream() { return; }
  * @apiParam {String} id The unique LiveStream-ID.
  * @apiParam {Object} audience 需要添加的观众信息.
  * @apiParam {String} audience.name 需要添加的观众名称.
- * @apiParam {String} audience.protocol 需要添加的观众端点类型，目前仅支持添加端点类型为rtspserver的观众.
- * @apiParam {String} audience.path 添加端点类型为rtspserver的观众所挂载的路径.
+ * @apiParam {String} audience.protocol 需要添加的观众端点类型，目前支持添加端点类型为rtspserver和webrtc的观众.
+ * @apiParam {String} [audience.path] 添加端点类型为rtspserver的观众所挂载的路径.
+ * @apiParam {String} [audience.signalingBridge] 添加端点类型为webrtc的观众所连接的信令服务器地址.
+ * @apiParam {String} [audience.sessionId] 添加端点类型为webrtc的观众所连接的会话Id .
  *
- * @apiExample Example usage:
+ * @apiExample Rtspserver example usage:
  * curl -X POST http://localhost:3030/wom/livestream.audience 
  * -H 'content-type: application/json' 
  * -d '{
@@ -97,6 +99,19 @@ function deleteLiveStream() { return; }
  *			"name" : "endpoint2",
  *			"protocol" : "rtspserver",
  *			"path" : "/test_server"
+ *		}
+ *	   }'
+ *
+ * @apiExample Webrtc example usage:
+ * curl -X POST http://localhost:3030/wom/livestream.audience 
+ * -H 'content-type: application/json' 
+ * -d '{
+ *		"id" : "8edb8984b49f434e8e6e907138389d1a",
+ *		"audience" : {
+ *			"name" : "endpoint2",
+ *			"protocol" : "webrtc",
+ *			"signalingBridge" : "http://localhost:3030/livestream.webrtc"
+ *			"sessionId" : "1111"
  *		}
  *	   }'
  *

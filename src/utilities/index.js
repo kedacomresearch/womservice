@@ -14,3 +14,9 @@ module.exports.id = function (moduleName) {
   }
   return moduleName + (id++);
 };
+
+const livestreamStorage = Object.create(null);
+const audienceStorage = Object.create(null);
+
+module.exports.livestreamStorage = livestreamStorage;
+module.exports.audienceStorage = audienceStorage;
