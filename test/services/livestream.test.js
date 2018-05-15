@@ -32,13 +32,28 @@ describe('\'livestream\' service', () => {
     this.server.close(done);
   });
 
-  describe('livestream service rtsp analyze', function () {
+  describe('livestream service analyze', function () {
     // this.timeout(12000);
-    let rtsp_test_server_app,
-      analyzer_app;
+    let rtsp_test_server_app, analyzer_app, webrtc_analyzer_app;
+
+    let audience_ep = {
+      name: 'endpoint2',
+      protocol: 'rtspserver', // rtspclient/rtspserver
+      path: '/test_server'
+    };
+
+    let audience_ep_webrtc = {
+      name: 'endpoint3',
+      protocol: 'webrtc', // rtspclient/rtspserver
+      signal_bridge: 'http://localhost:3030/livestream.webrtc',
+      connection_id: '1111'
+    };
+
+    let livestreamId,audienceId;
+
     before(async function() {
       // initialize rtsp test server app
-      rtsp_test_server_app = new webstreamer.RTSPTestServer('rtsp_test_server');
+      rtsp_test_server_app = new webstreamer.RTSPTestServer('rtsp_test_server1');
       await rtsp_test_server_app.initialize();
       await rtsp_test_server_app.startup();
 
@@ -53,6 +68,20 @@ describe('\'livestream\' service', () => {
       analyzer_app.on('multifilesink', async function (data) {
         analyzer_app.store_image(data);
       });
+
+      //init webrtc analyzer
+      webrtc_analyzer_app = new webstreamer.WebRTCAnalyzer('webrtc_test_analyzer', audience_ep_webrtc.signal_bridge, audience_ep_webrtc.connection_id);
+      await webrtc_analyzer_app.initialize();
+      webrtc_analyzer_app.on('spectrum', function (data) {
+        let obj = JSON.parse(data.toString('utf8'));
+        let magnitude = obj.magnitude;
+        webrtc_analyzer_app.calc_band_number(magnitude);
+      });
+      webrtc_analyzer_app.on('multifilesink', async function (data) {
+        webrtc_analyzer_app.store_image(data);
+      });
+
+      await webrtc_analyzer_app.startup();
     });
 
     after(async function() {
@@ -62,13 +91,6 @@ describe('\'livestream\' service', () => {
       await rtsp_test_server_app.stop();
       await rtsp_test_server_app.terminate();
     });
-
-    let audience_ep = {
-      name: 'endpoint2',
-      protocol: 'rtspserver', // rtspclient/rtspserver
-      path: '/test_server'
-    };
-    let livestreamId,audienceId;
 
     it('create livestream and return id of the livestream', () => {
       return rp({
@@ -90,7 +112,7 @@ describe('\'livestream\' service', () => {
       });
     });
 
-    it('add livestream audience', () => {
+    it('add livestream rtspserver audience', () => {
       return rp({
         method: 'POST',
         url: getUrl('wom/livestream.audience'),
@@ -149,7 +171,7 @@ describe('\'livestream\' service', () => {
       });
     });
 
-    it('remove livestream audience', () => {
+    it('remove livestream rtspserver audience', () => {
       return rp.del({
         url: getUrl('wom/livestream.audience'),
         qs : {
@@ -160,6 +182,72 @@ describe('\'livestream\' service', () => {
         assert.equal('{"OK":"success"}', res);
       });
     });
+
+
+    it('add livestream webrtc audience', () => {
+      return rp({
+        method: 'POST',
+        url: getUrl('wom/livestream.audience'),
+        body : {
+          id: livestreamId,
+          audience: audience_ep_webrtc
+        },
+        json: true
+      }).then((res) => {
+        audienceId = res.id;
+        if(!audienceId) {
+          assert.fail();
+        }
+      });
+    });
+
+    it('webrtc analyze', async function(){
+      this.timeout(0);
+
+      await sleep(1000);
+
+      try {
+        await webstreamer.utils.poll(() => {
+          if((webrtc_analyzer_app.audio_passed >= 3) &&
+            (webrtc_analyzer_app.images.length >= 10))
+            return true;
+          else
+            return false;
+        }, 100, 10000);
+      } catch (err) {
+        throw err;
+      }
+
+      let image_res;
+      try {
+        image_res = await webrtc_analyzer_app.analyze_image();
+      } catch (err) {
+        throw err;
+      }
+
+      try {
+        await webrtc_analyzer_app.stop();
+      } catch (error) {
+        throw new Error('video analyze failed: ' + error);
+      }
+
+      image_res.forEach((value) => {
+        assert.closeTo(value.time, value.ms, 10, 'ocr recognize time');
+      });
+    });
+
+    it('remove livestream webrtc audience', () => {
+      return rp.del({
+        url: getUrl('wom/livestream.audience'),
+        qs : {
+          audienceId: audienceId,
+          livestreamId: livestreamId
+        }
+      }).then((res) => {
+        assert.equal('{"OK":"success"}', res);
+      });
+    });
+
 
     it('delete livestream', () => {
       return rp.del({
@@ -173,5 +261,4 @@ describe('\'livestream\' service', () => {
     });
 
   });
-
 });
