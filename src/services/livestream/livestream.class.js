@@ -30,13 +30,16 @@ class Service {
     await livestream.initialize().catch(err => {
       throw new errors.GeneralError(err.message);
     });
-    await livestream.addPerformer({
+
+    let performer_ep = {
       name: name,
       protocol: protocol, // rtspclient/rtspserver
       url: url,
       video_codec: 'h264', // optional
       audio_codec: 'pcma' // optional
-    }).catch(err => {
+    };
+
+    await livestream.addPerformer(performer_ep).catch(err => {
       throw new errors.GeneralError(err.message);
     });
     await livestream.startup().catch(err => {

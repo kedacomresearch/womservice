@@ -22,17 +22,19 @@ class Service {
     let audience = data.audience;
 
     let audienceId = uuidv1();
-    audience.name = audienceId;
+    //audience.name = audienceId;
 
     await webstreamer.liveStreamAddAudience(id, audience).catch(err => {
       throw new errors.GeneralError(err.message);
     });
 
-    audienceStorage[audienceId] = {
-      name: data.audience.name,
-      livestreamId: id,
-      path: `rtsp://127.0.0.1${audience.path}`
-    };
+    if(audience.protocol !== 'webrtc') {
+      audienceStorage[audienceId] = {
+        name: data.audience.name,
+        livestreamId: id,
+        path: `rtsp://127.0.0.1/${audience.path}`
+      };
+    }
 
     return {
       id: audienceId
