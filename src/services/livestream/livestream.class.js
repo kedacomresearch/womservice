@@ -24,6 +24,13 @@ class Service {
       url = data.source.url;
     let uuid = uuidv1();
 
+    if(data.source.type === 'Rtsp Test Server') {
+      await webstreamer.createRtspTestServer(name).catch(err => {
+        throw new errors.GeneralError(err.message);
+      });
+      url = 'rtsp://127.0.0.1/test';
+    }
+
     webstreamer.createLiveStream(uuid);
     let livestream = webstreamer.getLiveStream(uuid);
 
@@ -46,10 +53,13 @@ class Service {
       throw new errors.GeneralError(err.message);
     });
 
-    livestreamStorage[uuid] = name;
+    livestreamStorage[uuid] = {
+      name: name,
+      type: data.source.type
+    };
 
     return {
-      id: uuid
+      id: uuid,
     };
   }
 
@@ -68,6 +78,9 @@ class Service {
     });
 
     webstreamer.removeLiveStream(uuid);
+    if(livestreamStorage[uuid].type === 'Rtsp Test Server') {
+      webstreamer.deleteRtspTestServer();
+    }
 
     delete livestreamStorage[uuid];
 

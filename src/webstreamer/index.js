@@ -4,7 +4,7 @@
 
 const webstreamer = require('webstreamer');
 const errors = require('@feathersjs/errors');
-
+const axios = require('axios');
 
 webstreamer.Initialize({
   rtsp_server: {
@@ -12,26 +12,71 @@ webstreamer.Initialize({
   }
 });
 
-
-const rtspServers = Object.create(null);
+const womAppServiceAddr = 'http://localhost:3232';
+let rtspServer = null;
+const rtspServerInfo = Object.create(null);
 const livestreams = Object.create(null);
+const rtspAnalyzers = Object.create(null);
 
-module.exports.createRtspTestServer = function(name = 'rtsp_test_server') {
-  if(! rtspServers[name] ) {
-    rtspServers[name] = new webstreamer.RTSPTestServer(name);
+module.exports.getRtspTestServer = function () {
+  if(rtspServer) {
+    return rtspServerInfo;
   } else {
-    throw new Error(`rtsp server named ${name} already created!`);
+    return null;
   }
-  return rtspServers[name];
 };
 
-module.exports.deleteRtspTestServer = async function(name) {
-  if(rtspServers[name]) {
-    await rtspServers[name].stop();
-    await rtspServers[name].terminate();
-    delete rtspServers[name];
+module.exports.createRtspAnalyzer = async function (audience) {
+  if(!rtspAnalyzers[audience.name]) {
+    let rtspAnalyzer = new webstreamer.RTSPAnalyzer(audience.name, `rtsp://127.0.0.1${audience.path}`);
+    rtspAnalyzers[audience.name] = rtspAnalyzer;
+    await rtspAnalyzer.initialize();
+    // audio
+    let old = new Date();
+    rtspAnalyzer.on('spectrum', function (data, meta) {
+      let obj = JSON.parse(data.toString('utf8'));
+      let now = new Date();
+      let delta = now.getTime() - old.getTime();
+
+      if(delta >= 1500) {
+        console.log('send spectrum');
+        old = now;
+        axios.post(`${womAppServiceAddr}/wom/onwomservicedata`, {
+          signalingBridge: audience.signalingBridge,
+          livestreamId: audience.livestreamId,
+          audienceId: audience.audienceId,
+          spectrum: obj.magnitude
+        }).catch(err => {
+          throw err;
+        });
+      }
+
+    });
+
+    return rtspAnalyzer;
   } else {
-    throw new Error(`rtsp server named ${name} not found!`);
+    throw new Error(`rtsp analyzer named ${name} already created!`);
+  }
+};
+
+module.exports.createRtspTestServer = async function(name = 'rtsp_test_server') {
+  if(rtspServer === null ) {
+    rtspServer = new webstreamer.RTSPTestServer(name);
+    await rtspServer.initialize();
+    await rtspServer.startup();
+  } else {
+    throw new Error(`rtsp test server already created!`);
+  }
+};
+
+module.exports.deleteRtspTestServer = async function() {
+  if(rtspServer) {
+    console.log('deleteRtspTestServer');
+    await rtspServer.stop();
+    await rtspServer.terminate();
+    rtspServer = null;
+  } else {
+    throw new Error(`rtsp test server not found!`);
   }
 };
 
@@ -73,9 +118,9 @@ module.exports.liveStreamAddAudience = async function (uuid, audience) {
   }
 };
 
-module.exports.liveStreamRemoveAudience = function (livestreamId, audienceId) {
+module.exports.liveStreamRemoveAudience = async function (livestreamId, audienceId) {
   if(livestreams[livestreamId]) {
-    return livestreams[livestreamId].removeAudience(audienceId);
+    await livestreams[livestreamId].removeAudience(audienceId);
   } else {
     throw Error('LiveStreamNotFound');
   }
