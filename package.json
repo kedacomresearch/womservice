@@ -32,11 +32,12 @@
     "@feathersjs/errors": "^3.2.2",
     "@feathersjs/express": "^1.1.2",
     "@feathersjs/feathers": "^3.1.0",
+    "axios": "^0.18.0",
     "compression": "^1.7.1",
     "cors": "^2.8.4",
     "helmet": "^3.10.0",
-    "uuid": "^3.2.1",
     "serve-favicon": "^2.4.5",
+    "uuid": "^3.2.1",
     "webstreamer": "git+https://github.com/kobegan/webstreamer.git",
     "winston": "^2.4.0"
   },
